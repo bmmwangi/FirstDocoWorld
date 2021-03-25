@@ -17,6 +17,6 @@ class SimpleMoveBehavior : public MoveBehavior{
 public:
 	SimpleMoveBehavior(DocoWorld *dwPtr);
 	~SimpleMoveBehavior();
-	void move(Doco *d);//implements the way doco moves
+	Location move(Doco *d);//sets docos new position and returns old position
 };
 #endif

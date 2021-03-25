@@ -135,7 +135,10 @@ void DocoWorld::updateWorld(void)
 			it = docos->erase(it);
 		}
 		else {
-			it.operator *()->move();//tell doco to move
+			Location l = it.operator *()->move();//tell doco to move
+			cellGrid[l.getX()][l.getY()].setDoco(nullptr); // vacate old cell
+			cellGrid[it.operator *()->getXPosition()][it.operator*()->getYPosition()].setDoco(it.operator *()); // occupy new cell
+			it.operator *()->eat();//tell doco to eat after every move
 			++it;
 		}
 	}

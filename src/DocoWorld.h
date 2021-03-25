@@ -14,6 +14,7 @@
 #include "DataParser.h"
 #include "Cell.h"
 #include "Doco.h"
+#include "Location.h"
 
 using namespace std;
 using namespace directions;

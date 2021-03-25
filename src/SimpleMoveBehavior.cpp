@@ -27,8 +27,9 @@ SimpleMoveBehavior::~SimpleMoveBehavior()
 //------------------------------------------------
 // returns pointer to the vector holding docos
 //------------------------------------------------
-void SimpleMoveBehavior::move(Doco *d)
+Location SimpleMoveBehavior::move(Doco *d)
 {
+	Location l(0,0);
 	int xPos = d->getXPosition(); 							// doco's current x position
 	int yPos = d->getYPosition(); 							// doco's current y position
 	int newXPos, newYPos, newHeading = -1; 					// doco's new (x, y) and heading
@@ -58,11 +59,11 @@ void SimpleMoveBehavior::move(Doco *d)
 
 	//if doco has energy, effect the move
 	if(d->getEnergyLevel() >= 10) {
-		d->setHeading(newHeading);								  //set docos heading
-		d->setXPosition(newXPos);   							  // set doco's new x,y position
-		d->setYPosition(newYPos);
-		d->setEnergyLevel( d->getEnergyLevel()-10 ); 			  // use 10 energy units
-		docoWorldPtr->getCellGrid()[xPos][yPos].setDoco(nullptr); // vacate old cell
-		docoWorldPtr->getCellGrid()[newXPos][newYPos].setDoco(d); // occupy new cell
+		d->setHeading(newHeading);								// doco's new heading
+		d->setXPosition(newXPos);   							// doco's new x position
+		d->setYPosition(newYPos);								// doco's new y position
+		d->setEnergyLevel( d->getEnergyLevel()-10 ); 			// use 10 energy units to move
+		l = Location(xPos, yPos);								// old location to return
 	}
+	return l;						// return doco's old position
 }

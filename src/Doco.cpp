@@ -157,10 +157,9 @@ EatBehavior *Doco::getEatBehavior()
  *  move moves the doco to a new cell
  *
 ------------------------------------------------*/
-void Doco::move()
+Location Doco::move()
 {
-	mBehavior->move(this);// delegate move to behavior object
-	eat();//eat the food is in new location
+	return mBehavior->move(this);// delegate move to behavior instance
 }
 
 //------------------------------------------------

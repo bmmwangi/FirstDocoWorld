@@ -11,6 +11,7 @@
 
 #include <vector>
 #include "Directions.h"
+#include "Location.h"
 
 using namespace directions;
 using namespace std;
@@ -27,7 +28,7 @@ class MoveBehavior
 	public:
 		MoveBehavior(DocoWorld *dwPtr);  // constructor
 		virtual ~MoveBehavior(){};	// destructor
-		virtual void move(Doco *d) = 0; //virtual move
+		virtual Location move(Doco *d) = 0; //virtual move
 		void getXYLocation(int xPos, int yPos, int h, int *newXPos, int *newYPos);
 		vector <int> scanCells(int x, int y); // scans cells around given x, y coordinates
 		int doFoodSniff(int x, int y, vector <int> vHeading);// returns int heading towards most food or -1

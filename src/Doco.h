@@ -11,6 +11,7 @@
 
 #include "SimpleEatBehavior.h"
 #include "SimpleMoveBehavior.h"
+#include "Location.h"
 
 using namespace std;
 
@@ -42,7 +43,7 @@ class Doco
 		int getEnergyLevel();			//
 		int getHeading();				//
 		char getMovement();				//
-		void move();					// doco can move to new cell
+		Location move();					// doco can move to new cell
 		void eat(); 					// doco can eat to increase its energy level
 		MoveBehavior *getMoveBehavior();//returns pointer to move-behavior
 		EatBehavior *getEatBehavior();	//returns pointer to eat-behavior
