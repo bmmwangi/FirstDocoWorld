@@ -44,11 +44,10 @@ void WorldView::renderDocoWorld()
 	cout << "Doco World Simulation will run for 60 seconds." << endl;
 	printEdge();//print border
 
-
 	for (int row=0; row<width; row++)// loop through each cell
 	{
 		if (row < 10)
-			cout << "0";	//pad digit with a space
+			cout << row/10;	//pad digit with a space
 		cout << row;		// print number
 		for (int col=0; col<height; col++) //
 		{
@@ -63,17 +62,16 @@ void WorldView::renderDocoWorld()
 	}
 }
 
-
+//------------------------------------------------
+// prints top edge of the doco world
+//------------------------------------------------
 void WorldView::printEdge(){
-	char tc[width] = "0000000000111111111122222";
-	char bc[width] = "0123456789012345678901234";
-
 	cout << setw(2) << " ";
 	for(int i=0; i< width; i++)
-		cout << setw(2) << tc[i];
+		cout << setw(2) << i/10;
 	cout << endl;
 	cout << setw(2) << " ";
 	for(int i=0; i< width; i++)
-		cout << setw(2) << bc[i];
+		cout << setw(2) << i%10;
 	cout << endl;
 }
