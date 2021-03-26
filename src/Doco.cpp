@@ -168,3 +168,10 @@ Location Doco::move()
 void Doco::eat(){
 	eBehavior->eat(this);// delegate to behavior object
 }
+
+//------------------------------------------------
+//eat - replenishes doco's energy level
+//------------------------------------------------
+char Doco::toString(){
+	return '*'; //doco representation
+}

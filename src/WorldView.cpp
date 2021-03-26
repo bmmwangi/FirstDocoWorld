@@ -52,7 +52,7 @@ void WorldView::renderDocoWorld()
 		for (int col=0; col<height; col++) //
 		{
 			if (docoWorld->getCellGrid()[row][col].getDoco() != NULL)
-				cout << setw(2) << '*';
+				cout << setw(2) << docoWorld->getCellGrid()[row][col].getDoco()->toString();//'*';
 			else if(docoWorld->getCellGrid()[row][col].getFoodAmount() != 0 )
 				cout << setw(2) << '.';
 			else// cell is empty, occupied or has food and renders accordingly

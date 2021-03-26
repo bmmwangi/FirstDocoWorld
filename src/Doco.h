@@ -47,5 +47,6 @@ class Doco
 		void eat(); 					// doco can eat to increase its energy level
 		MoveBehavior *getMoveBehavior();//returns pointer to move-behavior
 		EatBehavior *getEatBehavior();	//returns pointer to eat-behavior
+		char toString();
 };
 #endif

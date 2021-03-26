@@ -92,5 +92,5 @@ Doco *Cell::getDoco(){
 // return char ('-') for empty cell
 //------------------------------------------------
 char Cell::toString(){
-		return '-'; //empty cell
+	return '-'; //empty cell
 }
