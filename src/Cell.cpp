@@ -89,8 +89,13 @@ Doco *Cell::getDoco(){
 }
 
 //------------------------------------------------
-// return char ('-') for empty cell
+// return appropriate char representation of cell
 //------------------------------------------------
 char Cell::toString(){
-	return '-'; //empty cell
+	if (this->doco != nullptr)
+		return this->doco->toString();// occupying doco
+	else if(this->foodAmount != 0 )
+		return '.';					  // food
+	else
+		return '-'; 				  // unoccupied cell
 }

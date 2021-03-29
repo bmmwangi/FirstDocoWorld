@@ -19,13 +19,14 @@ class WorldView
 {
 	private: 
 		DocoWorld *docoWorld;// pointer to a doco world
-		int width;
-		int height;
+		int width;				// width of doco world
+		int height;				// height of doco world
+		int buffer_size;		// print buffer size
+		char *buffer;			// represents state of doco world
 
 	public:
 		WorldView(DocoWorld *dw);//
 		~WorldView();//
 		void renderDocoWorld();	//
-		void printEdge();
 };
 #endif

@@ -122,11 +122,7 @@ vector <Doco*> *DocoWorld::getDocos()
 //------------------------------------------------
 void DocoWorld::updateWorld(void)
 {
-	//1) add random amount of food
-	int moreFood = (rand() % 10)+1; // get random number of food pellets (1 - 10)
-	addFoodPellets(moreFood);		// add it to the world
-
-	//2) move the living docos
+	//1) move the living docos
 	vector<Doco*>::iterator it = docos->begin();
 	while(it != docos->end()) {
 		if(it.operator *()->getEnergyLevel() == 0) {//docos with zero energy are dead!
@@ -142,5 +138,9 @@ void DocoWorld::updateWorld(void)
 			++it;
 		}
 	}
+
+	//2) add random amount of food
+	int moreFood = (rand() % 10)+1; // get random number of food pellets (1 - 10)
+	addFoodPellets(moreFood);		// add it to the world
 }
 
