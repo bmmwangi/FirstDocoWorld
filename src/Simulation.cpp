@@ -18,7 +18,7 @@ using namespace std;
 //------------------------------------------------
 Simulation::Simulation(void)
 {
-	strcpy(filename, "src/DOCOData01.xml");	// get data filename
+	strcpy(filename, "DOCOData01.xml");	// get data filename
 	dataParser = new DataParser(filename);	// initialize dParser
 	docoWorld = new DocoWorld(dataParser);	// initialize doco world
 	worldView = new WorldView(docoWorld);	// create world view

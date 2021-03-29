@@ -15,6 +15,7 @@
 #include "Cell.h"
 #include "Doco.h"
 #include "Location.h"
+#include "Windows.h"
 
 using namespace std;
 using namespace directions;
