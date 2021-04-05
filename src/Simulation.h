@@ -37,5 +37,6 @@ class Simulation
 		Simulation();			// constructor
 		~Simulation();			// destructor
 		void start();			// start the simulation
+		void addDocos();		// populate doco-world
 };
 #endif

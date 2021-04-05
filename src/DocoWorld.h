@@ -11,14 +11,10 @@
 
 #include <stdlib.h>						/* srand, rand */
 #include <vector>
-#include "DataParser.h"
 #include "Cell.h"
 #include "Doco.h"
-#include "Location.h"
-#include "Windows.h"
 
 using namespace std;
-using namespace directions;
 
 class DocoWorld
 {
@@ -31,12 +27,12 @@ class DocoWorld
 		vector <Doco*> *docos; 		      // pointer to vector holding pointers to Docos
 
 	public:
-		DocoWorld(DataParser *dp);		  // constructor
+		DocoWorld(int width, int height); // constructor
 		~DocoWorld(void);				  // destructor
 
-		void createCellArray();			  // create cell-grid
-		void addFoodPellets(int f);		  // add food pellets
-		void addDocos(DataParser *dp);    // method places docos in predefined positions/cells
+		void createCellGrid();			  // create cell-grid
+		void addFoodPellets(int food);	  // add food pellets
+		void addDoco(Doco *d); 			  // add a doco to the world
 		void updateWorld();				  // update the state of the world
 		int getWidth(); 				  // return width of doco world
 		int getHeight(); 				  // return height of doco world

@@ -9,7 +9,6 @@
 
 
 #include <iostream>
-#include <string>
 #include <iomanip>
 #include "WorldView.h"
 #include "DocoWorld.h"
@@ -20,9 +19,9 @@ using namespace std;
 //------------------------------------------------
 // Default constructor
 //------------------------------------------------
-WorldView::WorldView(DocoWorld *dw)
+WorldView::WorldView(DocoWorld *dwp)
 {
-	docoWorld = dw;		// pointer to a doco world
+	docoWorld = dwp;		// pointer to a doco world
 	width = docoWorld->getWidth();
 	height = docoWorld->getHeight();
 	buffer_size = width*height*2 + 250;//size of print butter

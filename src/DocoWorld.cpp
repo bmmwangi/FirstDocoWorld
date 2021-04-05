@@ -6,7 +6,6 @@
 *
 * This program is entirely my own work
 *******************************************************************/
-
 #include "DocoWorld.h"
 
 using namespace std;
@@ -14,18 +13,13 @@ using namespace std;
 //------------------------------------------------
 // Default constructor
 //------------------------------------------------
-DocoWorld::DocoWorld(DataParser *dp)
+DocoWorld::DocoWorld(int w, int h)
 {
-	docoCount = dp->getDOCOCount(); //
-	wWidth = dp->getDOCOWorldWidth();//
-	wHeight = dp->getDOCOWorldHeight();//
-	foodCount = dp->getFoodCount();//
-	cellGrid = new Cell*[wHeight]; // wHeight defines number of rows of Cells
-	docos = new vector<Doco*>;// initialize vector of Docos
-
-	createCellArray(); // create the cells array
-	addFoodPellets(foodCount); // add initial amount of food pellets
-	addDocos(dp); //let there be Docos! ... populate the world with docos
+	wWidth = w;						// doco-world width
+	wHeight = h;					// doco-world height
+	cellGrid = new Cell*[wHeight]; 	// wHeight is number of rows of Cells
+	docos = new vector<Doco*>;		// initialize vector of Docos
+	createCellGrid(); 				// create the cell-grid
 }
 
 //------------------------------------------------
@@ -33,9 +27,10 @@ DocoWorld::DocoWorld(DataParser *dp)
 //------------------------------------------------
 DocoWorld::~DocoWorld(void)
 {
+	delete docos;
 	for (int row=0;row<wHeight; row++) //for each row
-		delete[] cellGrid[row]; //delete columns
-	delete [] cellGrid;//delete rows
+		delete[] cellGrid[row]; // recover col mem
+	delete [] cellGrid;//finally, recover row mem
 }
 
 //------------------------------------------------
@@ -55,7 +50,7 @@ int DocoWorld::getHeight(){
 //-------------------------------------------------------------
 // create a grid of cells as pointer to pointer of Cell objects
 //-------------------------------------------------------------
-void DocoWorld::createCellArray()
+void DocoWorld::createCellGrid()
 {
 	for (int row=0;row<wHeight; row++){   //for each row
 		cellGrid[row] = new Cell[wWidth]; //create columns
@@ -85,19 +80,11 @@ void DocoWorld::addFoodPellets(int food)
 //-------------------------------------------------------
 // add docos to the world in predetermined cell locations
 //-------------------------------------------------------
-void DocoWorld::addDocos(DataParser *dp)
+void DocoWorld::addDoco(Doco *d)
 {
-	int x, y; // x and y co-ordiantes of each doco
-	for(int i=0; i<docoCount; i++)
-	{
-		dp->getDOCOData(nullptr, &x, &y);//get docos x, y co-ords
-		Doco *d = new Doco(x,y);//create doco with given x,y co-ords
-		d->setHeading(rand() % 8); // initialize a random heading
-		d->setEatBehavior(new SimpleEatBehavior(this));// set doco's 'eat' behavior
-		d->setMoveBehavior(new SimpleMoveBehavior(this));// set doco's 'move' behavior
-		docos->push_back(d);// store doco
-		cellGrid[x][y].setDoco(d);//place doco on cell grid
-	}
+	d->setHeading(rand() % 8); // initialize a random heading
+	docos->push_back(d);// store doco
+	cellGrid[d->getXPosition()][d->getYPosition()].setDoco(d);//place doco on cell grid
 }
 
 //------------------------------------------------
@@ -107,7 +94,6 @@ Cell **DocoWorld::getCellGrid()
 {
 	return cellGrid; //return a pointer to pointer of cells
 }
-
 
 //------------------------------------------------
 // returns pointer to the vector holding docos
@@ -125,16 +111,14 @@ void DocoWorld::updateWorld(void)
 	//1) move the living docos
 	vector<Doco*>::iterator it = docos->begin();
 	while(it != docos->end()) {
-		if(it.operator *()->getEnergyLevel() == 0) {//docos with zero energy are dead!
+		if(it.operator *()->getEnergyLevel() <= 0) {//docos with zero energy are dead! Remove from world
 			cellGrid[it.operator* ()->getXPosition()][it.operator* ()->getYPosition()].setDoco(NULL);
 			delete *it;
 			it = docos->erase(it);
 		}
 		else {
-			Location l = it.operator *()->move();//tell doco to move
-			cellGrid[l.getX()][l.getY()].setDoco(nullptr); // vacate old cell
-			cellGrid[it.operator *()->getXPosition()][it.operator*()->getYPosition()].setDoco(it.operator *()); // occupy new cell
-			it.operator *()->eat();//tell doco to eat after every move
+			it.operator *()->move(this);//tell doco to move
+			it.operator *()->eat(this);//tell doco to eat after every move
 			++it;
 		}
 	}

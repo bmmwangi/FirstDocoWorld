@@ -9,11 +9,15 @@
 #ifndef DOCO_H
 #define DOCO_H
 
-#include "SimpleEatBehavior.h"
-#include "SimpleMoveBehavior.h"
+#include <vector>
+#include <stdlib.h>						/* srand, rand */
 #include "Location.h"
+#include "Directions.h"
 
 using namespace std;
+using namespace directions;
+
+class DocoWorld;
 
 class Doco
 {
@@ -23,30 +27,28 @@ class Doco
 		int energyLevel; 			  // doco energy level
 		int heading; 				  // current direction of movement
 		char movement;				  // doco style of movement (HORIZONTAL, VERTICAL, OR DIAGONAL)
-		EatBehavior *eBehavior;	  	  // doco has 'eat' behavior
-		MoveBehavior *mBehavior;  	  // doco has a 'move' behavior
 
 	public:
 		Doco(int x, int y);				// parameterised constructor
-		Doco(void);					 	//default constructor
+		Doco(void);					 	// default constructor
 		~Doco();					 	// destructor
 		void setXPosition(int x);		// setters
 		void setYPosition(int y);
 		void setEnergyLevel(int e);
 		void setHeading(int h);
-		void setMovement(char m);			// set movement style
-		void setEatBehavior(EatBehavior *eb);	// set eating behavior
-		void setMoveBehavior(MoveBehavior *mb);	// set movement behavior
+		void setMovement(char m);		// set movement style
 
 		int getXPosition();				// getters
 		int getYPosition();				//
 		int getEnergyLevel();			//
 		int getHeading();				//
 		char getMovement();				//
-		Location move();					// doco can move to new cell
-		void eat(); 					// doco can eat to increase its energy level
-		MoveBehavior *getMoveBehavior();//returns pointer to move-behavior
-		EatBehavior *getEatBehavior();	//returns pointer to eat-behavior
+		void eat(DocoWorld *dwp); 	    // doco can eat to increase its energy level
+		void move(DocoWorld *dwp);		// doco can move around in the doco-world
+		void getXYLocation(int heading, int *x, int *y);
+		int checkCurrentHeading(vector <int> vHeading);
+		int smellFood(DocoWorld *dwp, vector <int> vHeading);
+		vector <int> scanSurroundings(DocoWorld *dwp);
 		char toString();
 };
 #endif
