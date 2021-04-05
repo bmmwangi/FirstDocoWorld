@@ -259,7 +259,7 @@ void Doco::getXYLocation(int heading, int *x, int *y)
 void Doco::eat(DocoWorld *dwp){
 	int food = dwp->getCellGrid()[xPosition][yPosition].getFoodAmount();// new cell's food amount
 	dwp->getCellGrid()[xPosition][yPosition].setFoodAmount(0);			// no more food in cell
-	energyLevel += 50*food;												// doco energy gain is 50 for each food unit
+	energyLevel += 50*food;												// energy gain is 50 for each food unit
 }
 
 //------------------------------------------------
