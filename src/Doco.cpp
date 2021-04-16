@@ -125,100 +125,54 @@ char Doco::getMovement()
 ------------------------------------------------*/
 void Doco::move(DocoWorld *dwp)
 {
-	int newXPos, newYPos, newHeading = -1; 					// doco's new (x, y) and heading
-	int xPos = xPosition; 									// save doco's current position
-	int yPos = yPosition;
+	int x =-1; 					// possible x, y co-ords of cell...
+	int y =-1; 					// initialize to invalid values
+	int food = 0; 				// indicate when food is 'sniffed'
+	int foodHeading =-1;		// heading towards food or -1 if no food is found
+	int currentHeading =-1; 	// current heading or -1 if current heading is invalid
+	int newHeading =-1; 		// doco's final heading
+	vector <int> validHeading; 	// vector of all valid headings doco can take
 
-	//  get valid headings based on doco's position
-	vector <int> vHeading = scanSurroundings(dwp);			// get valid headings
-
-	// if current heading is still valid,
-	newHeading = checkCurrentHeading(vHeading); // continue in same heading
-
-	// override heading, go towards largest amount of food!
-	if(smellFood(dwp, vHeading) != -1){//
-		newHeading = smellFood(dwp, vHeading);
-	}
-
-	// if no food is found in surrounding cells
-	// and current heading is invalid, pick new heading
-	if (newHeading == -1 )
+	// scan all headings for a valid heading (i.e. heading that leads to a cell doco can occupy)
+	for (auto h : {NORTH, NORTHEAST, EAST, SOUTHEAST, SOUTH, SOUTHWEST, WEST, NORTHWEST})
 	{
-		int index = rand() % int (vHeading.size());
-		newHeading = vHeading[index];// pick at random from valid headings
-	}
+		//given a heading, generate a cell's co-ordinates
+		getXYLocation(h, &x, &y);
 
-	// determine final x, y coordinates to move to
-	getXYLocation(newHeading, &newXPos, &newYPos);
-
-	//if doco has energy, effect the move
-	if(energyLevel >= 10) {
-		heading  = newHeading;								// doco's new heading
-		xPosition = newXPos;   							// doco's new x position
-		yPosition = newYPos;								// doco's new y position
-		energyLevel -= 10;									// use 10 energy-units to move
-		dwp->getCellGrid()[xPos][yPos].setDoco(nullptr); // vacate old cell
-		dwp->getCellGrid()[newXPos][newYPos].setDoco(this); // occupy new cell
-	}
-}
-
-/* Scans for existence of valid cells around the current cell of occupation...
- * when this method is called, it returns headings that lead to valid cells
- * that DOCO MAY move to, adding them to a vector of valid headings. */
-vector <int> Doco::scanSurroundings(DocoWorld *dwp)
-{
-	vector<int> validHeading; // vector of headings doco can take
-	int x=-1;
-	int y=-1; //initialize temp x, y to invalid values
-
-	// for each direction, check if there is a cell and if the cell is unoccupied
-	for (auto heading : {NORTH, NORTHEAST, EAST, SOUTHEAST, SOUTH, SOUTHWEST, WEST, NORTHWEST})
-	{ //get cell coordinates given doco position & heading
-		getXYLocation(heading, &x, &y);
+		// x and y values must be within the doco world boundaries
 		if(x >= 0 && x < dwp->getWidth() && y >= 0 && y < dwp->getHeight())
-		{//x and y values must be within the doco world boundaries to be valid
-			if(dwp->getCellGrid()[x][y].getDoco() == nullptr)//cell is un-occupied
+		{
+			if(dwp->getCellGrid()[x][y].getDoco() == nullptr) //if cell is un-occupied
 			{
-				validHeading.push_back(heading);// heading is valid, add to container
+				// if cell has more food than previously found food..
+				if(food < dwp->getCellGrid()[x][y].getFoodAmount())
+				{
+					food = dwp->getCellGrid()[x][y].getFoodAmount();// save food amount;
+					foodHeading = h; 								// set as new food heading
+				}
+
+				// if current heading is also a valid heading
+				if(heading == h)
+				{
+					currentHeading = h; // set as current heading
+				}
+				validHeading.push_back(h); // save all valid headings for later check
 			}
 		}
 	}
-	return validHeading;
-}
 
-/* smellFood scans for food in cells next to current x,y location and
- * returns the heading with largest amount of food. If no food is found
- * -1 is returned*/
-int Doco::smellFood(DocoWorld *dwp, vector<int> vHeading)
-{
-	int food = 0;
-	int x = -1;
-	int y = -1;
-	int fHeading =-1;
-
-	for(int i=0; i<int (vHeading.size()); i++)
-	{
-		getXYLocation(vHeading[i], &x, &y);
-		if(food < dwp->getCellGrid()[x][y].getFoodAmount())
-		{
-			food = dwp->getCellGrid()[x][y].getFoodAmount();// cell's food amount;
-			fHeading = vHeading[i]; 						//food heading; move towards food
-		}
+	// if current heading is still valid,
+	if(currentHeading != -1){//
+		newHeading = currentHeading;
 	}
-	return fHeading;
-}
 
-/* Checks if current doco heading is still valid and
- * returns heading if it is. Otherwise returns -1 (invalid heading)*/
-int Doco::checkCurrentHeading(vector<int> vHeading)
-{
-	for(int i=0; i< int (vHeading.size()); i++)
-	{
-		if(vHeading[i] == heading){
-			return heading; // heading is valid!
-		}
+	// override current heading, go for largest amount of food!
+	if(foodHeading != -1){//
+		newHeading = foodHeading;
 	}
-	return -1;
+
+	// determine final cell to move to
+	pickNewCell(newHeading, validHeading, dwp);
 }
 
 /* getXYLocation method gets current heading, and returns
@@ -263,8 +217,40 @@ void Doco::eat(DocoWorld *dwp){
 }
 
 //------------------------------------------------
-//eat - replenishes doco's energy level
+// prints doco's representation
 //------------------------------------------------
 char Doco::toString(){
-	return '*'; //doco representation
+	return '*'; // doco representation
+}
+
+//------------------------------------------------
+// determines the final cell to move to
+//------------------------------------------------
+void Doco::pickNewCell(int h, vector<int> vHeading, DocoWorld *dwp)
+{
+	int x = -1;
+	int y = -1;
+	int xPos = xPosition;
+	int yPos =  yPosition;
+
+	// if no food is found in surrounding cells and
+	// current heading is invalid, pick new heading at random
+	if (h == -1 )
+	{
+		int index = rand() % int (vHeading.size());
+		h = vHeading[index];// pick at random from valid headings
+	}
+
+	// determine final x, y coordinates to move to
+	getXYLocation(h, &x, &y);
+
+	//if doco has energy, effect the move
+	if(energyLevel >= 10) {
+		heading  = h;								// doco's new heading
+		xPosition = x;   							// doco's new x position
+		yPosition = y;								// doco's new y position
+		energyLevel -= 10;									// use 10 energy-units to move
+		dwp->getCellGrid()[xPos][yPos].setDoco(nullptr); // vacate old cell
+		dwp->getCellGrid()[x][y].setDoco(this); // occupy new cell
+	}
 }

@@ -46,9 +46,7 @@ class Doco
 		void eat(DocoWorld *dwp); 	    // doco can eat to increase its energy level
 		void move(DocoWorld *dwp);		// doco can move around in the doco-world
 		void getXYLocation(int heading, int *x, int *y);
-		int checkCurrentHeading(vector <int> vHeading);
-		int smellFood(DocoWorld *dwp, vector <int> vHeading);
-		vector <int> scanSurroundings(DocoWorld *dwp);
+		void pickNewCell(int heading, vector <int> vHeading, DocoWorld *dwp);
 		char toString();
 };
 #endif

@@ -12,12 +12,11 @@
 
 using namespace std;
 
+#include <cctype>
 #include <string.h>
-#include <stdlib.h>				/* srand, rand */
 #include <time.h>				/* time */
 #include <sys/types.h>			// needed for the _ftime() function
 #include <sys/timeb.h>			// contains definition of timeb struct
-#include "DataParser.h"			// parses XML data file
 #include "DocoWorld.h"
 #include "WorldView.h"
 
@@ -37,6 +36,5 @@ class Simulation
 		Simulation();			// constructor
 		~Simulation();			// destructor
 		void start();			// start the simulation
-		void addDocos();		// populate doco-world
 };
 #endif

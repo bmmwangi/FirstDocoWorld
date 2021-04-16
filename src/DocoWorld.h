@@ -10,7 +10,9 @@
 #define DOCOWORLD_H
 
 #include <stdlib.h>						/* srand, rand */
+#include <ctime>
 #include <vector>
+#include "DataParser.h"					// parses XML data file
 #include "Cell.h"
 #include "Doco.h"
 
@@ -19,24 +21,25 @@ using namespace std;
 class DocoWorld
 {
 	private:
-		int docoCount;				      // population
-		int wWidth;					      // width of world
-		int wHeight; 				      // height/length of world
-		int foodCount; 				      // amount of available food
-		Cell **cellGrid;				  // pointer to pointer of Cell objects
-		vector <Doco*> *docos; 		      // pointer to vector holding pointers to Docos
+		DataParser *dparser;			// data parse
+		int docoCount;				    // population
+		int wWidth;					    // width of world
+		int wHeight; 				    // height/length of world
+		int foodCount; 				    // amount of available food
+		Cell **cellGrid;				// pointer to pointer of Cell objects
+		vector <Doco*> *docos; 		    // pointer to vector holding pointers to Docos
 
 	public:
-		DocoWorld(int width, int height); // constructor
-		~DocoWorld(void);				  // destructor
+		DocoWorld(DataParser *dp);		// constructor
+		~DocoWorld(void);				// destructor
 
-		void createCellGrid();			  // create cell-grid
-		void addFoodPellets(int food);	  // add food pellets
-		void addDoco(Doco *d); 			  // add a doco to the world
-		void updateWorld();				  // update the state of the world
-		int getWidth(); 				  // return width of doco world
-		int getHeight(); 				  // return height of doco world
-		vector <Doco*> *getDocos();		  // return the Docos
-		Cell** getCellGrid();  			  // return Cells grid layout of the doco world
+		void createCellGrid();			// create cell-grid
+		void addFoodPellets(int food);	// add food pellets
+		void addDocos(); 				// add a doco to the world
+		void updateWorld();				// update the state of the world
+		int getWidth(); 				// return width of doco world
+		int getHeight(); 				// return height of doco world
+		vector <Doco*> *getDocos();		// return the Docos
+		Cell** getCellGrid();  			// return Cells grid layout of the doco world
 };
 #endif

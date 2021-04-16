@@ -7,11 +7,9 @@
 * This program is entirely my own work
 *******************************************************************/
 
-
 #include <iostream>
 #include <iomanip>
 #include "WorldView.h"
-#include "DocoWorld.h"
 #include "windows.h"
 
 using namespace std;

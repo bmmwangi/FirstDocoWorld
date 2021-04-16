@@ -8,7 +8,6 @@
 *******************************************************************/
 
 #include <iostream>
-#include <cctype>
 #include "Simulation.h"
 
 using namespace std;
@@ -18,11 +17,9 @@ using namespace std;
 //------------------------------------------------
 Simulation::Simulation(void)
 {
-	strcpy(filename, "src/DOCOData01.xml");						// get data filename
+	strcpy(filename, "src/DOCOData01.xml");					// get data filename
 	dataParser = new DataParser(filename);					// initialize data-parser
-	docoWorld = new DocoWorld(dataParser->getDOCOWorldWidth(), dataParser->getDOCOWorldHeight());					// initialize doco world
-	docoWorld->addFoodPellets(dataParser->getFoodCount());	// add food pellets
-	addDocos();												// populate world with docos
+	docoWorld = new DocoWorld(dataParser);					// initialize doco world
 	worldView = new WorldView(docoWorld);					// create world view
 	done = false;
 	outputTime = 0.0d;
@@ -63,21 +60,6 @@ void Simulation::start(void)
 			duration--;
 		}
 	} while(duration > 0); // run for duration"
-}
-
-
-//-------------------------------------------------------
-// populate the world with docos
-//-------------------------------------------------------
-void Simulation::addDocos()
-{
-	int x, y; // x and y co-ordiantes of each doco
-	for(int i=0; i<dataParser->getDOCOCount(); i++)
-	{
-		dataParser->getDOCOData(nullptr, &x, &y); // get docos x, y co-ords
-		Doco *doco = new Doco(x, y);			  // create doco with given x,y co-ords
-		docoWorld->addDoco(doco);				  // add doco to the doco-world
-	}
 }
 
 // place obstacles

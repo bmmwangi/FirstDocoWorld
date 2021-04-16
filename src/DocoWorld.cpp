@@ -13,13 +13,19 @@ using namespace std;
 //------------------------------------------------
 // Default constructor
 //------------------------------------------------
-DocoWorld::DocoWorld(int w, int h)
+DocoWorld::DocoWorld(DataParser *dp)
 {
-	wWidth = w;						// doco-world width
-	wHeight = h;					// doco-world height
-	cellGrid = new Cell*[wHeight]; 	// wHeight is number of rows of Cells
-	docos = new vector<Doco*>;		// initialize vector of Docos
-	createCellGrid(); 				// create the cell-grid
+	dparser = dp;
+	wWidth = dparser->getDOCOWorldWidth();	// doco-world width
+	wHeight = dparser->getDOCOWorldHeight();	// doco-world height
+	docoCount = dparser->getDOCOCount();		//
+	foodCount = dparser->getFoodCount();		//
+	cellGrid = new Cell*[wHeight]; 		// wHeight is number of rows of Cells
+	docos = new vector<Doco*>;			// initialize vector of Docos
+	createCellGrid(); 					// create the cell-grid
+	addFoodPellets(foodCount);			// initialize food pellets
+	addDocos();							// add docos
+	srand(time(0));						// random seed
 }
 
 //------------------------------------------------
@@ -78,13 +84,19 @@ void DocoWorld::addFoodPellets(int food)
 }
 
 //-------------------------------------------------------
-// add docos to the world in predetermined cell locations
+// populate the world with docos
 //-------------------------------------------------------
-void DocoWorld::addDoco(Doco *d)
+void DocoWorld::addDocos()
 {
-	d->setHeading(rand() % 8); // initialize a random heading
-	docos->push_back(d);// store doco
-	cellGrid[d->getXPosition()][d->getYPosition()].setDoco(d);//place doco on cell grid
+	int x, y; // x and y co-ordiantes of each doco
+	for(int i=0; i<docoCount; i++)
+	{
+		dparser->getDOCOData(nullptr, &x, &y); 	// get docos x, y co-ords
+		Doco *doco = new Doco(x, y);		// create doco with given x,y co-ords
+		doco->setHeading(rand() % 8); 		// initialize a random heading
+		docos->push_back(doco);				// store doco
+		cellGrid[x][y].setDoco(doco);		//place doco on cell grid
+	}
 }
 
 //------------------------------------------------
@@ -109,7 +121,7 @@ vector <Doco*> *DocoWorld::getDocos()
 void DocoWorld::updateWorld(void)
 {
 	//1) move the living docos
-	vector<Doco*>::iterator it = docos->begin();
+	vector <Doco*>::iterator it = docos->begin();
 	while(it != docos->end()) {
 		if(it.operator *()->getEnergyLevel() <= 0) {//docos with zero energy are dead! Remove from world
 			cellGrid[it.operator* ()->getXPosition()][it.operator* ()->getYPosition()].setDoco(NULL);
